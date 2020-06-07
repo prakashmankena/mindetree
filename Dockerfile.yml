@@ -1,0 +1,8 @@
+FROM ubuntu
+MAITAINER prakash mankena 
+RUN sudo apt-get -y update && sudo apt-get install -y apache2
+COPY index.html /var/www/html/index.html
+USER admin
+VOLUME myvol 
+EXPOSE 80
+CMD ["servcice","apache2","restart"]

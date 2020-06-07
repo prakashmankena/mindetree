@@ -1,0 +1,44 @@
+---
+- hostname: all
+  become_true: yes
+  gather_facts: yes
+  tasks:
+  - name: to update repo
+    command: sudo apt-get -y  update
+    when: ansible_distribution=="Ubuntu"
+    ignore_errors: yes
+
+  - name: to stop the container 
+    command: docker stop ghunroo
+    ignore_errors: yes
+
+  - name: to remove the container 
+    command: docker rm ghunroo
+    ignore_errors: yes 
+
+  - name: to remove the image 
+    command: docker rmi prakashmankena/subantak
+    ignore_errors: yes
+
+  - name: to create the Docker image 
+    command: docker build -t subantak .
+    args:
+         chdir: /opt/docker
+    ignore_errors: yes
+
+  - name: to create the tag for docker image
+    command: docker tag subantak prakashmankena/subantak
+    ignore_errors: yes
+
+  - name: to push image to Docker Hub
+    command: docker push prakashmankena/subantak
+    ignore_errors: yes 
+
+  - name: to pull image from docker Hub 
+    command: docker pull prakashmankena/subantak
+    ignore_errors: yes
+
+  - name: to create the docker container
+    command: docker run -d --name ghunroo -p 8080:8080 prakashmankena/subantak
+    ignore_errors: yes
+
